@@ -1,0 +1,17 @@
+Package: multChernoff
+Title: Finite-sample Tail Bounds of Likelihood Ratio Test under Multinomial Sampling
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Richard",
+           family = "Guo",
+           role = c("aut", "cre"),
+           email = "ricguo@uw.edu",
+           comment = c(ORCID = "0000-0002-2081-7398"))
+Description: This package computes finite-sample tail bounds of the likelihood ratio test (LRT) of multinomial sampling. The tail bounds can be used to obtain conservative p-values and critical values, which provides valid inference even when standard Chi-squared asymptotics do not hold.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    plyr
