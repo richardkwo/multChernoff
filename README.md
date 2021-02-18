@@ -54,7 +54,11 @@ p.observed <- n.observed / n
 # critical value
 t.alpha <- criticalValue(k, n, p=alpha, verbose = TRUE)
 cat(sprintf("critical value = %f\n", t.alpha))
+```
 
+We get printout `critical value = 962.402970`. This value is then used in the following convex program.
+
+```R
 # convex program
 p <- Variable(k)
 obj <- p[k]
@@ -71,7 +75,7 @@ p.maximizer <- c(result$getValue(p))
 cat(sprintf("unseen <= %f\n", unseen))
 ```
 
-With MOSEK solver, the percentage of unseen species is at most 21.1%.
+With [MOSEK](https://cran.r-project.org/web/packages/Rmosek/) solver, the percentage of unseen species is at most 21.1%.
 
 ### Example 2: Analysis of a binary instrumental variable model
 
