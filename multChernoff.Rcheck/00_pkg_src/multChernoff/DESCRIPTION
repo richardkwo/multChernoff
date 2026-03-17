@@ -1,5 +1,6 @@
 Package: multChernoff
-Title: Finite-Sample Tail Bounds of Likelihood Ratio Test under Multinomial Sampling
+Title: Finite-Sample Tail Bounds of Likelihood Ratio Test under
+        Multinomial Sampling
 Version: 0.1.0
 Authors@R: 
     person(given = "Richard",
@@ -17,11 +18,9 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 URL: https://github.com/richardkwo/multChernoff
-Imports: 
-    plyr
-Suggests:
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+Imports: plyr
+Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
+NeedsCompilation: no
+Packaged: 2026-03-17 16:29:29 UTC; lyf

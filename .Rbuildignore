@@ -1,3 +1,10 @@
 ^multChernoff\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^\.DS_Store$
+^\.git$
+^\.gitignore$
+^\.\.Rcheck$
+^multChernoff\.Rcheck$
+^multChernoff_.*\.tar\.gz$
+^cran-comments\.md$

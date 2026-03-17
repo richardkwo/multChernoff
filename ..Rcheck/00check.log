@@ -1,0 +1,88 @@
+* using log directory '/Users/lyf/Desktop/26winter/r_chernoff/multChernoff/..Rcheck'
+* using R version 4.5.2 (2025-10-31)
+* using platform: aarch64-apple-darwin20
+* R was compiled by
+    Apple clang version 16.0.0 (clang-1600.0.26.6)
+    GNU Fortran (GCC) 14.2.0
+* running under: macOS Sonoma 14.6.1
+* using session charset: ASCII
+* using options '--no-manual --ignore-vignettes --as-cran'
+* checking for file './DESCRIPTION' ... OK
+* this is package 'multChernoff' version '0.1.0'
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Richard Guo <ricguo@uw.edu>'
+
+Package has a VignetteBuilder field but no prebuilt vignette index.
+
+Found the following (possibly) invalid URLs:
+  URL: https://github.com/richardkwo/multChernoff
+    From: DESCRIPTION
+    Status: Error
+    Message: libcurl error code 6:
+      	Could not resolve host: github.com
+  URL: https://github.com/richardkwo/multChernoff/issues
+    From: DESCRIPTION
+    Status: Error
+    Message: libcurl error code 6:
+      	Could not resolve host: github.com
+
+Found the following (possibly) invalid ORCID iD:
+  iD: 0000-0002-2081-7398	(from: DESCRIPTION)
+
+The Title field should be in title case. Current version is:
+  'Finite-sample Tail Bounds of Likelihood Ratio Test under Multinomial Sampling'
+In title case that is:
+  'Finite-Sample Tail Bounds of Likelihood Ratio Test under Multinomial Sampling'
+
+The build time stamp is missing.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .DS_Store
+  .git/.DS_Store
+  .git/logs/.DS_Store
+  .git/objects/.DS_Store
+  .git/refs/.DS_Store
+  .gitignore
+  ..Rcheck
+  .git
+These were most likely included in error. See section 'Package
+structure' in the 'Writing R Extensions' manual.
+
+CRAN-pack does not know about
+  .DS_Store
+  .git/.DS_Store
+  .git/logs/.DS_Store
+  .git/objects/.DS_Store
+  .git/refs/.DS_Store
+  ..Rcheck
+  .git
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package 'multChernoff' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... NOTE
+unable to verify current time
+* checking DESCRIPTION meta-information ... WARNING
+During startup - Warning messages:
+1: Setting LC_CTYPE failed, using "C" 
+2: Setting LC_COLLATE failed, using "C" 
+3: Setting LC_TIME failed, using "C" 
+4: Setting LC_MESSAGES failed, using "C" 
+5: Setting LC_MONETARY failed, using "C" 
+ ERROR
+During startup - Warning messages:
+1: Setting LC_CTYPE failed, using "C" 
+2: Setting LC_COLLATE failed, using "C" 
+3: Setting LC_TIME failed, using "C" 
+4: Setting LC_MESSAGES failed, using "C" 
+5: Setting LC_MONETARY failed, using "C" 
+* DONE
+Status: 1 ERROR, 1 WARNING, 3 NOTEs

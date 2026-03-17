@@ -1,0 +1,4 @@
+criticalValue           Critical value x such that P(LRT > x) <= p
+mgfBound                G(lambda; k,n) upper bound of the moment
+                        generating function on (LRT / 2)
+tailProbBound           Tail bound on P(LRT > x)
