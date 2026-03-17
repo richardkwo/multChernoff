@@ -18,9 +18,9 @@ knitr::opts_chunk$set(
 library(multChernoff)
 ```
 
-# Overview
+## Overview
 
-`multChernoff` computes finite-sample upper bounds for the likelihood ratio
+`multChernoff` computes finite-sample tail bounds for the likelihood ratio
 test (LRT) under multinomial sampling. These bounds can be used to obtain
 conservative p-values and critical values when the sample size is not large
 relative to the alphabet size, so standard chi-squared asymptotics may be
@@ -33,7 +33,7 @@ The package exposes three main functions:
 - `criticalValue()` returns a finite-sample critical value for a target tail
   probability.
 
-# When to Use This Package
+## When to Use This Package
 
 The package is most useful when:
 
@@ -44,7 +44,9 @@ The package is most useful when:
 In this setting, `tailProbBound()` and `criticalValue()` provide conservative
 finite-sample alternatives to asymptotic likelihood-ratio approximations.
 
-# A Simple Tail Bound
+## Basic Usage
+
+### Tail Probabilities
 
 The most direct workflow is to evaluate the finite-sample tail bound for a
 fixed LRT value.
@@ -53,15 +55,12 @@ fixed LRT value.
 tailProbBound(x = 20, k = 7, n = 50)
 ```
 
-This value is a conservative upper bound on the tail probability. For
-comparison, the package also supports independent multinomial samples by
-passing vectors of matching lengths for `k` and `n`.
+This value is a conservative upper bound on the tail probability. The function
+also supports independent multinomial samples by passing vectors of matching
+lengths for `k` and `n`, for example
+`tailProbBound(x = 12, k = c(3, 4), n = c(12, 20))`.
 
-```{r}
-tailProbBound(x = 12, k = c(3, 4), n = c(12, 20))
-```
-
-# Computing a Critical Value
+### Computing a Critical Value
 
 To calibrate a test at level `p`, use `criticalValue()`.
 
@@ -72,39 +71,63 @@ criticalValue(k = 10, n = 40, p = 0.05)
 The returned value can be used as a finite-sample alternative to the standard
 chi-squared cutoff.
 
-For comparison, here is the usual asymptotic cutoff for the same nominal level.
+
+## Example: What percentage of butterflies were unseen by Corbet?
+
+Naturalist Alexander Steven Corbet spent two years trapping butterflies in Peninsular Malaysia. Here is the data collected by Corbet.
+
+| Frequency | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   | 11   | 12   | 13   | 14   | 15   |
+| --------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| Species   | 118  | 74   | 44   | 24   | 29   | 22   | 20   | 19   | 20   | 15   | 12   | 14   | 6    | 12   | 6    |
+
+Here we ask the question: *what percentage of butterflies in Malaya belonged to the species that Corbet had not seen?* That is, we want to estimate the proportion of butterflies from all the unseen species. Clearly, the MLE is zero based on the sample. Instead, we ask for an upper bound with 95% confidence.
+
+Let k = 435 + 1, where 435 is the number of species observed by Corbet. The corresponding observed distribution is the distribution from the table above with a zero entry at the end. In the following program, we maximize the last entry of the underlying distribution subject to a tail bound on the LRT, which equals the Kullback-Leibler divergence KL(observed distribution || true distribution) multiplied by twice the sample size.
+
+See the paper at the bottom of this page for details. 
 
 ```{r}
-qchisq(0.95, df = 9)
+library(multChernoff)
+library(plyr)
+
+# Corbet butterfly data
+# https://en.wikipedia.org/wiki/Unseen_species_problem
+corbet.butterfly <- data.frame(j=1:15, n_j=c(118,74,44,24,29,22,20,19,20,15,12,14,6,12,6))
+n.butterfly <- Reduce(c, alply(corbet.butterfly, 1, function(.df) rep(.df$j, .df$n_j)))
+
+alpha <- 0.05
+n.observed <- c(n.butterfly, 0)    # the last one is the unseen
+n <- sum(n.observed)
+k <- length(n.observed)
+p.observed <- n.observed / n
+
+# critical value
+t.alpha <- criticalValue(k, n, p=alpha, verbose = TRUE)
+cat(sprintf("critical value = %f\n", t.alpha))
 ```
 
-# Inspecting the MGF Bound
+We get printout `critical value = 962.402970`. This value is then used in the following convex program.
 
-For lower-level diagnostics, `mgfBound()` evaluates the bound on the moment
-generating function at a given value of `lambda`.
+```{r, eval = FALSE}
+# convex program
+p <- Variable(k)
+obj <- p[k]
+constr <- list(p>=0, 
+               sum(p) == 1, 
+               2 * n * sum(p.observed * (log(p.observed) - log(p))) <= t.alpha)
+prob <- Problem(Maximize(obj), constr)
+result <- solve(prob, verbose=FALSE) # you should try other solvers
 
-```{r}
-mgfBound(k = 10, n = 20, lambda = c(0, 0.25, 0.5))
+# result
+print(result$status)
+unseen <- result$value
+
+cat(sprintf("unseen <= %f\n", unseen))
 ```
 
-# Workflow Summary
+With [MOSEK](https://cran.r-project.org/web/packages/Rmosek/) solver, the percentage of unseen species is at most 21.1%.
 
-In practice, the package workflow is:
-
-1. Compute an observed likelihood-ratio statistic from multinomial data.
-2. Use `tailProbBound()` to obtain a conservative p-value upper bound.
-3. Or use `criticalValue()` to calibrate a finite-sample rejection threshold.
-4. Use the resulting bound or critical value inside downstream inference or
-   optimization problems.
-
-# Relation to the README
-
-The README is best used as the landing page for the package website: short
-motivation, installation, and a minimal example. This vignette is the compact
-"Get started" article that explains the core API. Longer applications, such as
-the Corbet butterfly example, should live in separate future articles.
-
-# References
+## References
 
 F. Richard Guo and Thomas S. Richardson (2021). Chernoff-Type Concentration of
 Empirical Probabilities in Relative Entropy. *IEEE Transactions on Information
