@@ -6,14 +6,21 @@
 #'
 #' @export
 mgfBound <- function(k, n, lambda) {
-  # compute on the log scale
   .S <- sapply(0:n, function(m) {
     lgamma(m+1) + lchoose(n, m) + lchoose(m + k - 2, m) + m *  (log(lambda) - log(n))
   })
   if (length(lambda) == 1) {
-    result <- sum(exp(.S))
+    if (lambda == 0) {
+      return(1)
+    }
+    maxS <- max(.S)
+    if (is.infinite(maxS)) {
+      return(Inf)
+    }
+    result <- exp(maxS + log(sum(exp(.S - maxS))))
   } else {
-    result <- apply(exp(.S), 1, sum)
+    maxS <- apply(.S, 1, max)
+    result <- exp(maxS + log(rowSums(exp(.S - maxS))))
   }
   result[lambda == 0] <- 1
   return(result)
@@ -40,14 +47,22 @@ tailProbBound <- function(x, k, n, verbose=FALSE) {
   if (length(k)==1) {
     f <- function(lambda) {
       lambda <- pmin(pmax(lambda, 0), 1)
-      - lambda * x / 2 + log(mgfBound(k, n, lambda))
+      Gval <- mgfBound(k, n, lambda)
+      if (!is.finite(Gval) || Gval <= 0) {
+        return(1e10)
+      }
+      - lambda * x / 2 + log(Gval)
     }
   } else {
     f <- function(lambda) {
       lambda <- pmin(pmax(lambda, 0), 1)
       result <- - lambda * x / 2
       for (i in 1:length(k)) {
-        result <- result + log(mgfBound(k[i], n[i], lambda))
+        Gval <- mgfBound(k[i], n[i], lambda)
+        if (!is.finite(Gval) || Gval <= 0) {
+          return(1e10)
+        }
+        result <- result + log(Gval)
       }
       return(result)
     }
@@ -59,17 +74,27 @@ tailProbBound <- function(x, k, n, verbose=FALSE) {
     lambda.init <- seq(0, 1, length.out = 4)
   }
   sols <- plyr::laply(lambda.init, function(.x) {
-    stats::optim(.x, f, method="L-BFGS-B", lower = 0, upper=1)
+    stats::optim(.x, f, method="L-BFGS-B", lower = 1e-8, upper=0.99999)
   })
   m <- which.min(sols[,2])
   sol.par <- unlist(sols[,1])[m]
   sol.val <- unlist(sols[,2])[m]
   if (verbose) {
     lambda.vec <- seq(0, 1, length.out = 100)
-    plot(lambda.vec, f(lambda.vec), type="l", xlab="lambda", ylab="bound")
+    plot_vals <- sapply(lambda.vec, function(lam) {
+      Gval <- mgfBound(k, n, lam)
+      if (length(Gval) > 1) {
+        Gval <- Gval[1]
+      }
+      if (!is.finite(Gval) || Gval <= 0) {
+        return(1e10)
+      }
+      -(lam * x / 2) + log(Gval)
+    })
+    plot(lambda.vec, plot_vals, type="l", xlab="lambda", ylab="bound")
     graphics::abline(v=sol.par, col="red")
   }
-  return(exp(sol.val))
+  return(min(exp(sol.val), 1))
 }
 
 #' Critical value x such that \eqn{P(LRT > x) \le p}
