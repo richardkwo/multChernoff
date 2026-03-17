@@ -1,3 +1,7 @@
+# multChernoff 1.0.0
+- Fixed a numerical overflow bug. 
+- Better documentation. 
+
 # multChernoff 0.1.0
 
 - Initial public release.

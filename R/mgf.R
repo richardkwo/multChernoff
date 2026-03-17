@@ -12,8 +12,13 @@
 #' @param n sample size
 #' @param lambda number between 0 and 1
 #'
+#' @return A numeric upper bound on the MGF of LRT evaluated at \code{lambda}.
 #' @seealso \code{\link{tailProbBound}}, \code{\link{criticalValue}}
 #' @export
+#'
+#' @examples
+#' mgfBound(k = 5, n = 20, lambda = 0.5)
+#' mgfBound(k = 5, n = 20, lambda = 0)  # always 1 at lambda = 0
 mgfBound <- function(k, n, lambda) {
   .S <- sapply(0:n, function(m) {
     lgamma(m+1) + lchoose(n, m) + lchoose(m + k - 2, m) + m *  (log(lambda) - log(n))
@@ -141,6 +146,8 @@ tailProbBound <- function(x, k, n, verbose=FALSE) {
 #' @param verbose draw the minimizer if \code{TRUE}
 #' @note For independent multinomial samples, k and n must be of the same length.
 #'
+#' @return A finite-sample critical value \eqn{x} such that the bound on
+#'   \eqn{P(2 \times LRT > x)} is at most \code{p}.
 #' @seealso \code{\link{tailProbBound}}, \code{\link{mgfBound}}
 #' @export
 #'

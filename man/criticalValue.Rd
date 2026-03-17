@@ -15,6 +15,10 @@ criticalValue(k, n, p = 0.05, verbose = FALSE)
 
 \item{verbose}{draw the minimizer if \code{TRUE}}
 }
+\value{
+A finite-sample critical value \eqn{x} such that the bound on
+\eqn{P(2 \times LRT > x)} is at most \code{p}.
+}
 \description{
 The LRT is the log-likelihood ratio test statistic, which can be written as
 \deqn{LRT = n \, KL(\hat{p} \| p).}

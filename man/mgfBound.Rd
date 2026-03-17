@@ -13,6 +13,9 @@ mgfBound(k, n, lambda)
 
 \item{lambda}{number between 0 and 1}
 }
+\value{
+A numeric upper bound on the MGF of LRT evaluated at \code{lambda}.
+}
 \description{
 The LRT is the log-likelihood ratio test statistic, which can be written as
 \deqn{LRT = n \, KL(\hat{p} \| p),}
@@ -21,6 +24,10 @@ the true probabilities multiplied by the sample size. \eqn{G(\lambda; k,n)} is
 a polynomial in \eqn{\lambda} such that
 \deqn{MGF(\lambda; LRT) := E_{p}[\exp(\lambda \times LRT)] \leq G(\lambda; k,n)}
 holds for every \eqn{\lambda \in [0,1]} and every \eqn{p}.
+}
+\examples{
+mgfBound(k = 5, n = 20, lambda = 0.5)
+mgfBound(k = 5, n = 20, lambda = 0)  # always 1 at lambda = 0
 }
 \seealso{
 \code{\link{tailProbBound}}, \code{\link{criticalValue}}

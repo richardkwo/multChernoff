@@ -87,7 +87,6 @@ Let k = 435 + 1, where 435 is the number of species observed by Corbet. The corr
 See the paper at the bottom of this page for details. 
 
 ```{r}
-library(multChernoff)
 library(plyr)
 
 # Corbet butterfly data
@@ -125,7 +124,7 @@ unseen <- result$value
 cat(sprintf("unseen <= %f\n", unseen))
 ```
 
-With [MOSEK](https://cran.r-project.org/web/packages/Rmosek/) solver, the percentage of unseen species is at most 21.1%.
+With [MOSEK](https://CRAN.R-project.org/package=Rmosek) solver, the percentage of unseen species is at most 21.1%.
 
 ## References
 
