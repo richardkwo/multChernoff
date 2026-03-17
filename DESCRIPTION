@@ -6,8 +6,12 @@ Authors@R:
            family = "Guo",
            role = c("aut", "cre"),
            email = "ricguo@umich.edu")
-Author: Richard Guo [aut, cre]
-Maintainer: Richard Guo <ricguo@umich.edu>
+    person(given = "Ivana",
+           family = "liu",
+           role = "aut",
+           email = "yifeiliu@umich.edu")
+Author: Richard Guo [aut, cre], Ivana Liu [aut]
+Maintainer: Richard Guo <ricguo@umich.edu>, Ivana Liu <yifeiliu@umich.edu>
 Description: Computes a finite-sample tail bound for the log-likelihood ratio test
     (LRT) statistic under multinomial sampling. The resulting bound is used to compute
     finite-sample conservative p-values and critical values when the standard 
