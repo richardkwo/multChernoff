@@ -1,9 +1,18 @@
-#' G(lambda; k,n) upper bound of the moment generating function on (LRT / 2)
+#' An upper bound on the moment generating function of LRT
+#'
+#' The LRT is the log-likelihood ratio test statistic, which can be written as
+#' \deqn{LRT = n \, KL(\hat{p} \| p),}
+#' namely the Kullback-Leibler divergence from the empirical probabilities to
+#' the true probabilities multiplied by the sample size. \eqn{G(\lambda; k,n)} is
+#' a polynomial in \eqn{\lambda} such that
+#' \deqn{MGF(\lambda; LRT) := E_{p}[\exp(\lambda \times LRT)] \leq G(\lambda; k,n)}
+#' holds for every \eqn{\lambda \in [0,1]} and every \eqn{p}.
 #'
 #' @param k number of categories
 #' @param n sample size
 #' @param lambda number between 0 and 1
 #'
+#' @seealso \code{\link{tailProbBound}}, \code{\link{criticalValue}}
 #' @export
 mgfBound <- function(k, n, lambda) {
   .S <- sapply(0:n, function(m) {
@@ -26,20 +35,35 @@ mgfBound <- function(k, n, lambda) {
   return(result)
 }
 
-#' Tail bound on P(LRT > x)
+#' Tail bound on P(2 LRT > x).
 #'
-#' @param x the value of the LRT
+#' The LRT is the log-likelihood ratio test statistic, which can be written as
+#' \deqn{LRT = n \, KL(\hat{p} \| p).}
+#' By the Wilks' theorem, for a fixed k-dimensional
+#' probability vector, it holds that
+#' \deqn{2 \times LRT \to_{d} \chi^2_{k-1}.}
+#' This function returns a finite-sample counterpart to
+#' \code{pchisq(x, k-1, lower.tail=FALSE)}.
+#' The LRT is also extended to multiple independent multinomial trials.
+#' For example, for a \eqn{(k_1, n_1)}-trial and a \eqn{(k_2, n_2)}-trial,
+#' we have
+#' \deqn{LRT = n_1 \, KL(\hat{p}_1 \| p_1) + n_2 \, KL(\hat{p}_2 \| p_2).}
+#'
+#' @param x the value of \eqn{2 \times LRT}
 #' @param k number of categories (a vector for independent multinomial draws)
 #' @param n sample size (a vector for independent multinomial draws)
 #' @param verbose draw the minimizer if \code{TRUE}
 #' @note For independent multinomial samples, k and n must be of the same length.
 #'
-#' @return an upper bound on P(LRT > x), which can be used as a conservative p-value
+#' @seealso \code{\link{criticalValue}}, \code{\link{mgfBound}}
+#'
+#' @return An upper bound on P(2 LRT > x), which can be used as a conservative p-value.
 #' @export
 #'
 #' @examples
 #' tailProbBound(20, 7, 50)
 #' pchisq(20, 6, lower.tail=FALSE) # compare with the standard chi-square asymptotic
+#' # two independent multinomial trials (k=3, n=4) and (k=12, n=20)
 #' tailProbBound(12, c(3, 4), c(12, 20))
 #' pchisq(12, 5, lower.tail=FALSE) # compare with the standard chi-square asymptotic
 tailProbBound <- function(x, k, n, verbose=FALSE) {
@@ -97,22 +121,38 @@ tailProbBound <- function(x, k, n, verbose=FALSE) {
   return(min(exp(sol.val), 1))
 }
 
-#' Critical value x such that \eqn{P(LRT > x) \le p}
+#' Critical value x such that \eqn{P(2 LRT > x) \le p}
+#'
+#' The LRT is the log-likelihood ratio test statistic, which can be written as
+#' \deqn{LRT = n \, KL(\hat{p} \| p).}
+#' By the Wilks' theorem, for a fixed k-dimensional
+#' probability vector, it holds that
+#' \deqn{2 \times LRT \to_{d} \chi^2_{k-1}.}
+#' This function returns a finite-sample counterpart to
+#' \code{qchisq(p, k-1, lower.tail=FALSE)}.
+#' The LRT is also extended to multiple independent multinomial trials.
+#' For example, for a \eqn{(k_1, n_1)}-trial and a \eqn{(k_2, n_2)}-trial,
+#' we have
+#' \deqn{LRT = n_1 \, KL(\hat{p}_1 \| p_1) + n_2 \, KL(\hat{p}_2 \| p_2).}
 #'
 #' @param k number of categories (a vector for independent multinomial draws)
 #' @param n sample size (a vector for independent multinomial draws)
 #' @param p significance level (e.g., 0.05)
 #' @param verbose draw the minimizer if \code{TRUE}
+#' @note For independent multinomial samples, k and n must be of the same length.
 #'
-#' @seealso tailProbBound
+#' @seealso \code{\link{tailProbBound}}, \code{\link{mgfBound}}
 #' @export
 #'
 #' @examples
 #' n <- 1:40
 #' crit <- sapply(n, function(.n) criticalValue(20, .n, p=0.01))
 #' plot(n, crit)
-#' abline(h=qchisq(0.01, df=20-1, lower.tail = FALSE)) # standard chi-square asymptotic
+#' # chi-squared asymptotic by Wilks' theorem
+#' abline(h=qchisq(0.01, df=20-1, lower.tail = FALSE))
 #' criticalValue(10, 40, p=0.05)
+#' # two independent multinomial trials (k=3, n=4) and (k=12, n=20)
+#' criticalValue(c(3, 4), c(12, 20), p=0.05)
 criticalValue <- function(k, n, p=0.05, verbose=FALSE) {
   sol <- stats::uniroot(function(x) tailProbBound(x, k, n) - p, c(0, 1e3))
   if (verbose) {

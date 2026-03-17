@@ -8,3 +8,5 @@
 ^multChernoff\.Rcheck$
 ^multChernoff_.*\.tar\.gz$
 ^cran-comments\.md$
+^doc$
+^Meta$

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mgf.R
 \name{criticalValue}
 \alias{criticalValue}
-\title{Critical value x such that \eqn{P(LRT > x) \le p}}
+\title{Critical value x such that \eqn{P(2 LRT > x) \le p}}
 \usage{
 criticalValue(k, n, p = 0.05, verbose = FALSE)
 }
@@ -16,15 +16,31 @@ criticalValue(k, n, p = 0.05, verbose = FALSE)
 \item{verbose}{draw the minimizer if \code{TRUE}}
 }
 \description{
-Critical value x such that \eqn{P(LRT > x) \le p}
+The LRT is the log-likelihood ratio test statistic, which can be written as
+\deqn{LRT = n \, KL(\hat{p} \| p).}
+By the Wilks' theorem, for a fixed k-dimensional
+probability vector, it holds that
+\deqn{2 \times LRT \to_{d} \chi^2_{k-1}.}
+This function returns a finite-sample counterpart to
+\code{qchisq(p, k-1, lower.tail=FALSE)}.
+The LRT is also extended to multiple independent multinomial trials.
+For example, for a \eqn{(k_1, n_1)}-trial and a \eqn{(k_2, n_2)}-trial,
+we have
+\deqn{LRT = n_1 \, KL(\hat{p}_1 \| p_1) + n_2 \, KL(\hat{p}_2 \| p_2).}
+}
+\note{
+For independent multinomial samples, k and n must be of the same length.
 }
 \examples{
 n <- 1:40
 crit <- sapply(n, function(.n) criticalValue(20, .n, p=0.01))
 plot(n, crit)
-abline(h=qchisq(0.01, df=20-1, lower.tail = FALSE)) # standard chi-square asymptotic
+# chi-squared asymptotic by Wilks' theorem
+abline(h=qchisq(0.01, df=20-1, lower.tail = FALSE))
 criticalValue(10, 40, p=0.05)
+# two independent multinomial trials (k=3, n=4) and (k=12, n=20)
+criticalValue(c(3, 4), c(12, 20), p=0.05)
 }
 \seealso{
-tailProbBound
+\code{\link{tailProbBound}}, \code{\link{mgfBound}}
 }

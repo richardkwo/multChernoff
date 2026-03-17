@@ -2,12 +2,12 @@
 % Please edit documentation in R/mgf.R
 \name{tailProbBound}
 \alias{tailProbBound}
-\title{Tail bound on P(LRT > x)}
+\title{Tail bound on P(2 LRT > x).}
 \usage{
 tailProbBound(x, k, n, verbose = FALSE)
 }
 \arguments{
-\item{x}{the value of the LRT}
+\item{x}{the value of \eqn{2 \times LRT}}
 
 \item{k}{number of categories (a vector for independent multinomial draws)}
 
@@ -16,10 +16,20 @@ tailProbBound(x, k, n, verbose = FALSE)
 \item{verbose}{draw the minimizer if \code{TRUE}}
 }
 \value{
-an upper bound on P(LRT > x), which can be used as a conservative p-value
+An upper bound on P(2 LRT > x), which can be used as a conservative p-value.
 }
 \description{
-Tail bound on P(LRT > x)
+The LRT is the log-likelihood ratio test statistic, which can be written as
+\deqn{LRT = n \, KL(\hat{p} \| p).}
+By the Wilks' theorem, for a fixed k-dimensional
+probability vector, it holds that
+\deqn{2 \times LRT \to_{d} \chi^2_{k-1}.}
+This function returns a finite-sample counterpart to
+\code{pchisq(x, k-1, lower.tail=FALSE)}.
+The LRT is also extended to multiple independent multinomial trials.
+For example, for a \eqn{(k_1, n_1)}-trial and a \eqn{(k_2, n_2)}-trial,
+we have
+\deqn{LRT = n_1 \, KL(\hat{p}_1 \| p_1) + n_2 \, KL(\hat{p}_2 \| p_2).}
 }
 \note{
 For independent multinomial samples, k and n must be of the same length.
@@ -27,6 +37,10 @@ For independent multinomial samples, k and n must be of the same length.
 \examples{
 tailProbBound(20, 7, 50)
 pchisq(20, 6, lower.tail=FALSE) # compare with the standard chi-square asymptotic
+# two independent multinomial trials (k=3, n=4) and (k=12, n=20)
 tailProbBound(12, c(3, 4), c(12, 20))
 pchisq(12, 5, lower.tail=FALSE) # compare with the standard chi-square asymptotic
+}
+\seealso{
+\code{\link{criticalValue}}, \code{\link{mgfBound}}
 }

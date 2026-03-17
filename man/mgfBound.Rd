@@ -2,7 +2,7 @@
 % Please edit documentation in R/mgf.R
 \name{mgfBound}
 \alias{mgfBound}
-\title{G(lambda; k,n) upper bound of the moment generating function on (LRT / 2)}
+\title{An upper bound on the moment generating function of LRT}
 \usage{
 mgfBound(k, n, lambda)
 }
@@ -14,5 +14,14 @@ mgfBound(k, n, lambda)
 \item{lambda}{number between 0 and 1}
 }
 \description{
-G(lambda; k,n) upper bound of the moment generating function on (LRT / 2)
+The LRT is the log-likelihood ratio test statistic, which can be written as
+\deqn{LRT = n \, KL(\hat{p} \| p),}
+namely the Kullback-Leibler divergence from the empirical probabilities to
+the true probabilities multiplied by the sample size. \eqn{G(\lambda; k,n)} is
+a polynomial in \eqn{\lambda} such that
+\deqn{MGF(\lambda; LRT) := E_{p}[\exp(\lambda \times LRT)] \leq G(\lambda; k,n)}
+holds for every \eqn{\lambda \in [0,1]} and every \eqn{p}.
+}
+\seealso{
+\code{\link{tailProbBound}}, \code{\link{criticalValue}}
 }
