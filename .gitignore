@@ -3,3 +3,8 @@
 .Rdata
 .httr-oauth
 .DS_Store
+..Rcheck/
+*.Rcheck/
+*.tar.gz
+*.log
+*.out
